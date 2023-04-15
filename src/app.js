@@ -8,43 +8,22 @@ const server = http.createServer((req, res) => {
       const buf = Buffer.from(chunk);
       const str = buf.toString();
       chunks.push(str);
-    });
-
-    req.on("end", () => {
-      const obj = JSON.parse(chunks.join(""));
+      const obj = JSON.parse(chunks);
       const value1 = obj.num1;
       const value2 = obj.num2;
 
-      // Validate input
-      if (value1 <= 0 || !Number.isInteger(value1)) {
-        res.statusCode = 404;
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify({ error: "num1 must be a positive integer" }));
-        return;
+      // Write code here to calculate power of a number
+      if (typeof value1 !== "number" || value1 <= 0 || value2 < 0) {
+        res.writeHead(404, { "Content-type": "text/plain" });
+        res.end("The operation cannot be performed");
+      } else if (typeof value1 === "number" && typeof value2 === "number") {
+        res.writeHead(200, { "Content-type": "text/plain" });
+        res.end(`The result is ${Math.pow(value1, value2)}`);
+      } else {
+        res.writeHead(400, { "Content-type": "text/plain" });
+        res.end(`400 Bad Request`);
       }
-
-      if (value2 < 0 || !Number.isInteger(value2)) {
-        res.statusCode = 400;
-        res.setHeader("Content-Type", "application/json");
-        res.end(
-          JSON.stringify({ error: "num2 must be a non-negative integer" })
-        );
-        return;
-      }
-
-      // Calculate result
-      const result = Math.pow(value1, value2);
-
-      // Send response
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "application/json");
-      res.end(JSON.stringify({ result }));
     });
-  } else {
-    // Handle invalid HTTP method
-    res.statusCode = 405;
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ error: "Invalid HTTP method" }));
   }
 });
 
