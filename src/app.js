@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
       const result = Math.pow(value1, value2);
 
       // Send the result back as the response
-      res.writeHead(200, { "Content-Type": "application/json" });
+      res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ result }));
     });
   }
